@@ -196,7 +196,6 @@
     <Compile Include="VacancyRss.aspx.designer.cs">
       <DependentUpon>VacancyRss.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
