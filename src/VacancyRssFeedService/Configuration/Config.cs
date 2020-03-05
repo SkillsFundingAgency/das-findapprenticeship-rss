@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Configuration;
 
 namespace VacancyRssFeedService.Configuration
 {
@@ -19,11 +18,12 @@ namespace VacancyRssFeedService.Configuration
         /// <returns></returns>
         public static IConfiguration AddConfig(this IConfiguration config)
         {
-            config["ConfigurationStorageConnectionString"] = System.Configuration.ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"];
-            config["AppName"] = System.Configuration.ConfigurationManager.AppSettings["AppName"];
-            config["EnvironmentName"] = System.Configuration.ConfigurationManager.AppSettings["EnvironmentName"];
+            config["ConfigurationStorageConnectionString"] = ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"];
+            config["AppName"] = ConfigurationManager.AppSettings["AppName"];
+            config["EnvironmentName"] = ConfigurationManager.AppSettings["EnvironmentName"];
             
             config = Load(config);
+            AddAppInsights();
 
             return config;
         }
@@ -58,6 +58,11 @@ namespace VacancyRssFeedService.Configuration
         private static TableOperation GetOperation(string serviceName, string environmentName, string version)
         {
             return TableOperation.Retrieve<ConfigurationItem>(environmentName, $"{serviceName}_{version}");
+        }
+
+        private static void AddAppInsights()
+        {
+            TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["InstrumentationKey"];
         }
     }
 }
