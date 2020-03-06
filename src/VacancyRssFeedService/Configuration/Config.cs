@@ -62,7 +62,7 @@ namespace VacancyRssFeedService.Configuration
 
         private static void AddAppInsights()
         {
-            TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["InstrumentationKey"];
+            TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["APPINSIGHTS_INSTRUMENTATIONKEY"];
         }
     }
 }
