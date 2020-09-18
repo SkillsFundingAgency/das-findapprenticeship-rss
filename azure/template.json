@@ -11,10 +11,13 @@
         "environmentName": {
             "type": "string"
         },
-        "sharedFrontEndAppServicePlan": {
+        "sharedFrontEndAppServicePlanName": {
             "type": "string"
         },
-        "sharedFrontEndAppServicePlanResourceGroupName": {
+        "sharedFrontEndSubnetResourceId": {
+            "type": "string"
+        },
+        "sharedAppServicePlanResourceGroup": {
             "type": "string"
         },
         "configurationStorageConnectionString": {
@@ -51,7 +54,7 @@
             "condition": "[greater(length(parameters('customHostName')), 0)]",
             "apiVersion": "2017-05-10",
             "name": "app-service-certificate",
-            "resourceGroup": "[parameters('sharedFrontEndAppServicePlanResourceGroupName')]",
+            "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -107,10 +110,13 @@
                         "value": "[variables('appServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedFrontEndAppServicePlan')]"
+                        "value": "[parameters('sharedFrontEndAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[parameters('sharedFrontEndAppServicePlanResourceGroupName')]"
+                        "value": "[parameters('sharedAppServicePlanResourceGroup')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[parameters('sharedFrontEndSubnetResourceId')]"
                     },
                     "appServiceAppSettings": {
                         "value": [
