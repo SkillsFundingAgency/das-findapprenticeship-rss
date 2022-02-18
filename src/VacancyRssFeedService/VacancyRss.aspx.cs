@@ -106,7 +106,7 @@ namespace VacancyRssFeedService
             
             var results = vacancyController.GetVacanciesForRss(parameters);
 
-            if (DateTime.Now.Minute > 10)
+            if (DateTime.Now.Minute < 10)
             {
                 feed = new SyndicationFeed(results.FeedTitle, results.FeedDescription, new Uri(results.AlternateLink));
                 items.Add(new SyndicationItem("Sorry, this service is closing soon","From 1 April 2022, you will not be able to log in or use this service. Use our new recruitment Application Programming Interfaces (APIs) service to create adverts using your existing systems or display adverts from Find an apprenticeship on your websites. Get started with the recruitment APIs as an employer", new Uri("https://www.gov.uk/guidance/get-started-with-the-recruitment-apis-as-an-employer")));
