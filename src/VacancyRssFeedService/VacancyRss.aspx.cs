@@ -24,6 +24,9 @@ namespace VacancyRssFeedService
             try
             {
                 VacancySearchDetailForRssDTO parameters = GetParameters();
+
+                
+                
                 CreateFeed(parameters);
             }
             catch (Exception ex)
@@ -97,44 +100,13 @@ namespace VacancyRssFeedService
         /// <param name="parameters">The parameters.</param>
         private void CreateFeed(VacancySearchDetailForRssDTO parameters)
         {
-            var vacancyController = new VacancyLogicService(new Data.VacancyDataService());
-            var results = vacancyController.GetVacanciesForRss(parameters);
-
             SyndicationFeed feed = null;
             var items = new List<SyndicationItem>();
-
-            if (results != null)
-            {
-                feed = new SyndicationFeed(results.FeedTitle, results.FeedDescription, new Uri(results.AlternateLink));
-                
-                if (!string.IsNullOrWhiteSpace(results.FeedImageUrl))
-                    feed.ImageUrl = new Uri(results.FeedImageUrl);
-
-                if (!string.IsNullOrWhiteSpace(results.FeedCopyrightInformation))
-                    feed.Copyright = new TextSyndicationContent(results.FeedCopyrightInformation);
-
-                feed.Links.Add(new SyndicationLink(new Uri(Request.Url.ToString()), "self", null, "application/rss+xml", 1000));
-
-                //foreach and LINQ statements are slower than for loop
-                //even if they are more readable, and as performance is critical, I have stuck with for.
-                for (var i = 0; i < results.Vacancies.Count; i++)
-                {
-                    var vacancyTitle = results.Vacancies[i].VacancyTitle;
-                    var vacancyDesc = FormatFeed(results.Vacancies[i]);
-
-                    string url = QueryStringHelper.CreateVacancyUrlForRssFeed(results.Vacancies[i]);
-
-                    //Now create the RSS item
-                    var item = new SyndicationItem(vacancyTitle, vacancyDesc, new Uri(url));
-                    item.Categories.Add(new SyndicationCategory(results.Vacancies[i].ApprenticeshipFramework.Description));
-                    item.Id = url;
-                    //As it is using the vacancy DTO to deliver the results, possible start date is actually date the vacancy went live.
-                    item.PublishDate = results.Vacancies[i].PossibleStartDate;
-                   
-
-                    items.Add(item);
-                }
-            }
+            var vacancyController = new VacancyLogicService(new Data.VacancyDataService());
+            
+            var results = vacancyController.GetVacanciesForRss(parameters);
+            feed = new SyndicationFeed(results.FeedTitle, results.FeedDescription, new Uri(results.AlternateLink));
+            items.Add(new SyndicationItem("Sorry, this service is closing soon","From 1 April 2022, you will not be able to log in or use this service. Use our new recruitment Application Programming Interfaces (APIs) service to create adverts using your existing systems or display adverts from Find an apprenticeship on your websites. Get started with the recruitment APIs as an employer", new Uri("https://www.gov.uk/guidance/get-started-with-the-recruitment-apis-as-an-employer")));
 
             if (feed == null) return;
 
